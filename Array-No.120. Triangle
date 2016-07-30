@@ -1,0 +1,26 @@
+题意：给定一个二维数组，形似三角形，上层元素可以移动到下层相邻的元素，例如3可以和6、5相连；找出从顶到底的和最小的路径；
+
+三角形的特点： 每行元素的个数等于当前的行数；
+
+主要思路：动态规划；z直接使用三层循环求解的复杂度为O(2^n)，n为行数；
+
+	* 最优解的特征：“2”向下走有“3”和“4”两条路径可选，而从“2”出发的最优路径必是分别从“3”和“4”出发的最优路径中更优的一个
+	* 用f(i,j)表示从第i行第j个点出发的最优路径，则f(i,j) = min {f(i+1, j), f(i+1, j+1)} + val(i,j), val(i,j)表示当前出发点的值
+	* 自底向上的求解
+
+
+class Solution {
+public:
+    int minimumTotal(vector<vector<int>>& triangle) {
+        int len = triangle.size();
+        vector<vector<int>> f(triangle);// 复制triangle，直接使用triangle会改变原有值；
+        int sum = 0;
+
+        for (int i = len - 2; i >= 0; i--){
+            for (int j = 0; j <= i; j++){
+                f[i][j] = min(f[i+1][j], f[i+1][j+1]) + triangle[i][j];
+            }
+        }
+        return f[0][0];
+    }
+};
