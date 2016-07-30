@@ -1,0 +1,77 @@
+题意： 给定[0,1,2,...n]中的n个非重复的数，找出没有出现的那个值；
+
+主要思路：
+
+	* 排序，先升序排列，再遍历，判断nums[i] 与i是否相等
+	* 利用位运算性质：a^b^b = a
+	* 利用[0,1,2,,,,n]的和减去给定的n个数的和，即为缺失的数
+
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) {
+        int len = nums.size();
+        sort(nums.begin(), nums.end());
+        for (int i = 0; i < len; i++){
+           if (nums[i] != i) return i;
+        }
+        return len;
+    }
+};
+
+/*************************/
+another solution with binary serach
+public int missingNumber(int[] nums) { //binary search
+    Arrays.sort(nums);
+    int left = 0, right = nums.length, mid= (left + right)/2;
+    while(left<right){
+        mid = (left + right)/2;
+        if(nums[mid]>mid) right = mid;
+        else left = mid+1;
+    }
+    return left;
+}
+
+class Solution{
+public:
+int missingNumber(vector<int>& nums) {
+     int Xor = 0, i = 0;
+     for(i = 0; i < nums.size(); i++){
+         Xor = Xor^i^nums[i];
+         int m = i^nums[i];
+
+     }
+     return Xor^i;
+    }
+};
+
+
+/*********************/
+another solution with bit manipulation
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) {
+        int result = nums.size();
+        int i=0;
+       
+        for(int num:nums){
+            result ^= num;
+            result ^= i;
+            i++;
+        }
+       
+        return result;
+    }
+};
+
+class Solution{
+public:
+     int missingNumber(vector<int>& nums){
+          int len = nums.size();
+          int sum = len;
+          for (int i = 0; i < len; i++){
+             sum += i - nums[i];
+          }
+          return sum;
+          
+     }
+};
