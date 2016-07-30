@@ -1,0 +1,71 @@
+python实现：
+python中删除list中的元素有如下方法,li = [1,2,3,4,5,6]
+
+	* 使用del删除对应下标的元素 例如：del li[2]  #li = [1,2,4,5,6]
+	* 使用pop方法删除list的最后一个元素 例如：li.pop #li = [1,2,4,5]
+	* 使用remove方法移除指定元素 例如 li.remove(4) #li = [1,2,5]
+
+
+class Solution(object):
+    def removeElement(self, nums, val):
+        """
+        :type nums: List[int]
+        :type val: int
+        :rtype: int
+        """
+        while val in nums:
+                nums.remove(val)
+        return len(nums)
+
+c++实现：
+c++ vector 中删除元素有如下方法：
+使用vector容器中的std::vector::erase()方法。std::remove()并不删除元素，容器的size并没有变化，只是替换元素。
+示例：
+std::vetor::erase()
+函数原型：iterator erase(iterator position);删除指定元素
+                  iterator erase(iterator first, iterator lst); 删除指定范围内的元素
+返回值：指向删除元素的下一个元素。
+
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        vector<int>::iterator it;
+        for (it = nums.begin();it != nums.end();){
+            if(*it == val){
+                nums.erase(it);
+                continue;
+            }
+            it++;
+        }
+        return nums.size();
+    }
+};
+
+java 方法：
+不需要调用函数删除元素，可以通过赋值的方法
+
+public class Solution {
+     public int removeElement(int[] nums, int val) {
+        int count = 0;
+        int size = nums.length;
+        for(int i =0; i < size; i++){
+            if (nums[i] != val) {
+                nums[count++] = nums[i];
+            }
+        }
+        return count;
+    }
+}
+
+C方法：
+类似于java
+
+int removeElement(int* nums, int numsSize, int val) {
+    int count = 0;
+    for (int i = 0; i < numsSize; i++){
+        if (nums[i] != val){
+            nums[count++] = nums[i];
+        }
+    }
+    return count;
+}
