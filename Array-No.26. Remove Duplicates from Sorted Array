@@ -1,0 +1,45 @@
+主要思想：题目要求不能重新开辟数组进行存储，需要对原始数组元素进行操作，使得去除重复后元素排在前面。
+
+	* 从第2个元素开始，依次判断该元素是否与前一个元素相等，若相等则下标移动；
+	* 若不相等，则将计数的当前位置填充为当前元素，并将元素下标加1
+
+
+c++:
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        int size = nums.size();
+        if (size == 0) return 0;
+        int cou = 1;
+        for (int i = 1; i < size; i++){
+            if (nums[i] == nums[i-1]) continue;
+            else{
+                nums[cou] = nums[i];
+                cou ++;
+            }
+        }
+        return cou;
+    }
+};
+
+python:
+
+class Solution(object):
+    def removeDuplicates(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        size = len(nums)
+        if size == 0:
+            return 0
+        cou = 1
+
+        for i in range(1,size):
+            if nums[i] == nums[i-1]:
+                continue
+            else:
+                nums[cou] = nums[i]
+                cou += 1
+        return cou
