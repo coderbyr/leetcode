@@ -1,0 +1,38 @@
+题意： 给定数组和一个定值，寻找数组中的三个数，使得其和与给定值最接近
+主要思想：与3Sum 有些区别，在于需要判断三数之和与给定目标值之间的变化；但基本思想类似，即控制两个下标分别从前和后向中间逼近，成为Two Pointer方法。需要注意的是：对数组进行排序
+
+算法时间复杂度： O(n*logn) + O(n^2) = O(n^2)
+
+python:
+
+
+	* 排序使用sorted(list)函数；max值由sys,maxint引入
+	* 只需要第一层循环遍历一遍，另一层循环比较当前和与目标值的差，从而控制指针从前和后的移动
+
+
+class Solution(object):
+    def threeSumClosest(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: int
+        """
+        if not nums:
+            return []
+
+        sortNum = sorted(nums)
+        closest = sys.maxint
+        for i in range(len(nums)):
+            left, right = i + 1, len(nums)-1
+            while left < right:
+                SumNum = sortNum[i] + sortNum[left] + sortNum[right]
+
+                if SumNum < target:
+                    left += 1
+                else:
+                    right -= 1
+
+                if abs(SumNum - target) < abs(closest - target):
+                    closest = SumNum
+        return closest
+
