@@ -1,0 +1,39 @@
+题意：给定一个有序数组移位后的形式，找出移位后数组的最小值；
+
+主要思路：
+
+	* 移位后的元素的最小值必为违反约束： nums[i] < nums[i+1]
+	* 此外，还有更高效的方法： 使用二分查找
+
+
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+        int len = nums.size();
+        for (int i = len - 2; i >= 0; i--){
+            if (nums[i+1] < nums[i]) {
+                return nums[i+1];
+            }
+        }
+        return nums[0];
+    }
+};
+
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+        int len = nums.size();
+        int start = 0, end = len - 1;
+        while (start < end){
+            if (nums[start] < nums[end]) return nums[start];
+            int mid = (start + end)/2;
+
+            if (nums[mid] >= nums[start]){
+                start = mid + 1;// the pivot element is int the right half
+            }else{
+                end = mid; // the pivot element is in the left half
+            }
+        }
+        return nums[start];
+    }
+};
