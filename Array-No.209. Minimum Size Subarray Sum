@@ -1,0 +1,27 @@
+题意：给定一个包含n个正整数的数组，以及一个正整数s，找出数组中长度最小的子串使得其和>= s。
+
+主要思路：设置双指针，分别为start 和end，end向后移动，当sum >= s时，再固定end，移动start,同时比较end-start与min的大小，以此更新最短子数组的长度；当end移动到数组末端时，start也能获取到最优的组合。
+
+c++:
+
+class Solution {
+public:
+    int minSubArrayLen(int s, vector<int>& nums) {
+        int size = nums.size();
+        if (size == 0) return 0;
+        int start = 0, end = 0;
+        int min = size+1;
+        int sum = 0;
+        while (start < size && end < size){
+            while (sum < s && end < size){
+                sum += nums[end++];
+            }
+            while(sum >= s && start <= end){
+                min = min > (end - start) ? (end - start) : min;
+                sum -= nums[start++];
+            }
+        }
+
+        return min == size+1 ? 0 : min;
+    }
+};
