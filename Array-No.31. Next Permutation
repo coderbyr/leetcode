@@ -1,0 +1,36 @@
+题意： 给定一个排列，求下一个排列大于当前的排列；若不存在则返回升序的排列；
+主要思路：
+
+	* 从数组末端开始向前找到元素使得nums[i] < nums[i+1]，例如： 2，1，1，7，2，0 找到元素1
+	* 下一个排列需要从i+1,n找到一个元素使得nums[j] > nums[i]，例如2，1，1，7，2，0找到元素2
+	* 交换位置i和j的元素
+	* 将交换后的i位置后的元素按照升序排列，确保是最小的排列
+
+
+这里可以将算法进行改进，先找出第i个位置，在进行交换；
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+        int size = nums.size();
+        int i = 0, j = 0;
+        // if (size <= 1) return;
+        for (i = size - 2; i >= 0; i--){
+            if (nums[i+1] > nums[i]){ // only need to find the first element that vilate the rule nums[i] > nums[i+1]
+                for(j = size - 1; j > i - 1; j --){
+                    if (nums[j] > nums[i]) break; 
+                }
+                    swap(nums[i], nums[j]);
+                    reverse(nums.begin() + i + 1, nums.end());
+                    return;
+            }
+        }
+//the for loop can be improved like this:
+//for (i = size - 2; i > = 0; i--) if (nums[i+1] > nums[i]) break;
+//for (j = size - 1; j < i - 1; j--) if (nums[j] > nums[i]) break;
+//
+
+        reverse(nums.begin(), nums.end());// not exits permutation
+        return;
+
+    }
+};
