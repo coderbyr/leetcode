@@ -1,0 +1,29 @@
+题意：给定整数k和n，寻找从1~9之间的k个数，使得其和等于n且k个数不能相同。
+
+主要思路：利用回溯法，每次先寻找一个数i，然后寻找其余的k-1个数使得之和为n-i；
+
+c++:
+
+class Solution {
+public:
+    vector<vector<int>> combinationSum3(int k, int n) {
+        vector<vector<int>> res;
+        vector<int> path;
+        combinationHelp(res, path, 1, k, n);
+        return res;
+    }
+
+    void  combinationHelp(vector<vector<int>> &res,vector<int> &path,  int start, int k, int n){
+        if (k == 0&&n == 0){ // each step k-1 and n -i
+            res.push_back(path);
+            return;
+        }
+
+        for(int i = start; i <= 10 - k&&i <= n; i++){
+            path.push_back(i);
+            combinationHelp(res, path, i+1, k - 1, n - i);
+            path.pop_back();// when backtracing, the last node should be pop back , in case the new next node could be push back.
+        }
+    }
+};
+
