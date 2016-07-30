@@ -1,0 +1,62 @@
+主要思想：
+
+	* 利用杨辉三角的性质：每个数字等于上一行的左右两个数字之和即 C(n+1,i)=C(n,i)+C(n,i-1)
+	* 第n行的m个数可表示为 C(n-1,m-1)，即为从n-1个不同元素中取m-1个元素的组合数
+
+
+C++: 迭代求解
+
+class Solution {
+public:
+    vector<int> getRow(int rowIndex) {
+        vector<int> res(rowIndex + 1, 0);
+        res[0] = 1;
+
+        for (int i = 1; i < rowIndex + 1; i++){
+            for (int j = i; j >= 1; j--){
+                res[j] += res[j-1];
+            }
+        }
+
+        return res;
+    }
+};
+
+c++: 组合数求解
+
+class Solution {
+public:
+    vector<int> getRow(int rowIndex) {
+    vector<int> ans(rowIndex + 1, 1);
+    int mid = rowIndex/2;
+    long comb = 1;
+
+    int cou = 1;
+
+    for (int i = rowIndex; i >= mid; i--){
+        comb *= i;
+        comb /= cou;
+        cou ++;
+
+        ans[i - 1] = (int)comb;
+        ans[cou - 1] = (int)comb;
+    }
+    return ans;
+    }
+};
+
+python : 巧妙地在每一行的左边和右边分别加0,构造下一行，从而迭代求解
+map:对每个元素进行同样的操作
+
+class Solution(object):
+    def getRow(self, rowIndex):
+        """
+        :type rowIndex: int
+        :rtype: List[int]
+        """
+        row = [1]
+
+        for i in range(1, rowIndex):
+            row = list(map(lambda x, y: x + y, [0] + row, [row] + [0]))
+        return row
+
