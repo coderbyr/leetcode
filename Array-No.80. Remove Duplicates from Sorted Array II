@@ -1,0 +1,43 @@
+题意： 在Remove Duplicates的基础上，放宽条件，允许至多两个元素重复；
+
+思路： Remove Duplicates I 通过比较第二个元素与前一个元素是否相等，从而控制下标的移动；本题中，通过比较第三个元素与第一个元素的大小即可，需要主要的是，从第三个元素开始算起
+
+python:
+
+class Solution(object):
+    def removeDuplicates(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        size = len(nums)
+        cou = 0
+
+        for i in nums:
+            if cou < 2 or i > nums[cou-2]:
+                nums[cou] = i
+                cou += 1
+        return cou
+
+
+C++：
+
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        int size = nums.size();
+        if (size < 2) return size;
+
+        int cou = 1;
+        for (int i = 2; i < size; i++){
+            if (nums[i] == nums[cou] && nums[i] == nums[cou - 1]) continue;
+            else{
+               nums[++cou] = nums[i];
+            }
+        }
+        return cou+1;
+    }
+};
+
+
