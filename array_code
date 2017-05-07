@@ -1,0 +1,413 @@
+//author:lipengyu
+
+//最小子串和
+int minSubArray(vector<int> &nums, int s){
+	int size = nums.size();
+	int minL = size + 1;
+	int start = 0, end = 0;
+	int sum = 0;
+	while (start < size && end < size){
+		while (end < size && sum < s) sum += nums[end++];
+		while (start <= end && sum >= s){
+			minL = min(end - start, minL);
+			sum -= nums[start++];
+		}
+	}
+	return minL == size+1 ? 0 : minL;
+}
+
+//最长递增子序列（不一定连续）
+int lengthOfLIS(vector<int> &nums){
+	int size = nums.size();
+	vector<int> res(size+1, 1);    //初始化为1
+	int maxL = 0;
+
+	for (int i = 0; i < size; i++){
+		for (int j = 0; j < i; j++){
+			if (nums[i] > nums[j]) res[i] = max(res[i], res[j]+1);
+		}
+		maxL = max(maxL, nums[i]);
+	}
+	return maxL;
+}
+
+
+//连续子数组最大的和
+int maxSubArr(vector<int> &nums){
+	int size = nums.size();
+	int res = nums[0];
+	int maxSum = INT_MIN;
+	//int start = 0, end = 0;
+	for (int i = 1; i < size; i++){
+		res = max(res+nums[i], nums[i]);
+		//if (res == nums[i]) start += 1;
+		//else end += 1;
+		maxL = max(res, maxL);
+	}
+	return maxL;
+}
+
+
+//最大连续子数组乘积和
+int maxProductArr(vector<int> &nums){
+	int size = nums.size()
+	int maxTemp = nums[0];
+	int minTemp = nums[0];
+	int maxVal = nums[0];
+	for (int i = 1; i < size; i++){
+		int a = maxTemp*nums[i]; 
+		int b = minTemp*nums[i];
+		minTemp = min(min(a,b), nums[i]);
+		maxTemp = max(max(a,b), nums[i]);
+		maxVal = max(maxVal, maxTemp);
+	}
+	return maxVal;
+}
+
+//找到有序移位数组中最小值,数组中无重复元素
+int findMin(vector<int> &nums){
+	int size = nums.size();
+	int start = 0, end = size-1;
+	while (start < end){
+		if (nums[start] < nums[end]) return nums[start];
+		int mid = start + (end - start)/2;
+		if (nums[mid] >= nums[start]) start = mid + 1;
+		else end = mid;
+	}
+	return nums[start];
+}
+
+int findMin(vector<int> &nums){
+	int size = nums.size();
+	int start = 0, end = size-1;
+	int mid = 0;
+	while (start < end){
+		mid = start + (end-start)/2;  //不需要判断nums[start] < nums[end]
+		if (nums[mid] >= nums[end]) start = mid + 1;
+		else end = mid;
+	}
+	return nums[start];
+}
+
+//找到有序移位数组中最小值，数组中有重复元素
+int findMin(vector<int> &nums){
+	int size = nums.size();
+	int start = 0, end = size-1;
+	while (start < end){
+		if (nums[start] < nums[end]) return nums[start];
+		int mid = start + (end-start)/2;
+		if (nums[mid] > nums[start]) start = mid + 1;
+		else if (nums[mid] < nums[start]) end = mid;
+		else start++; //move lower bound
+	}
+	return nums[start];
+}
+
+//找到给定目标值在移位后的有序数组中索引
+int search(vector<int> &nums, int target){
+	int size = nums.size();
+	int start = 0, end = size - 1;
+	while (start <= end){ //start 和 end 可能处于同一位置，此时即为target
+		int mid = start + (end-start)/2;
+		if (nums[mid] == target) return mid;
+		if (nums[mid] >= nums[end]){
+			if (nums[start] <= target && nums[mid] > target) end = mid - 1;
+			else start = mid + 1;
+		}else{
+			if (nums[end] >= target && nums[mid] < target) start = mid + 1;
+			else end = mid - 1;
+		}
+	}
+	return -1;     
+}
+
+//找到给定目标值在移位后的有序数组中的索引，数组中可能有重复元素
+bool search(vector<int> &nums, int target){
+	int size = nums.size();
+	int start = 0, end = size - 1;
+	while (start <= end){
+		int mid = start + (end - start)/2;
+		if (nums[mid] == target) return true;
+		if (nums[mid] > nums[end]){
+			if (nums[start] <= target && nums[mid] > target) end = mid - 1;
+			else start = mid + 1;
+		}else if (nums[mid] < nums[end]){
+			if (nums[end] >= target && nums[mid] < target) start = mid + 1;
+			else end = mid - 1;
+		}else{
+			end--;
+	}
+	return false;
+}
+
+//给定目标值在有序数组中位置，若不再存在则返回应插入的位置
+int searchInseart(vector<int> &nums, int target){
+	int size = nums.size();
+	int start = 0, end = size - 1;
+	while (start < end){
+		int mid = start + (end - start)/2;
+		if (nums[mid] == target) return mid;
+		if (nums[mid] > target) end = mid - 1;
+		else start = mid + 1;
+	}
+
+	if (nums[start] > target) return start--;
+	else return start++;
+}
+
+
+//移除有序数组中重复元素
+int removeDuplicates(vector<int> &nums){
+	int size = nums.size();
+	if (size == 0) return 0;
+	int cnt = 1;
+	for (int i = 1; i < size; i++){
+		//if (nums[i] != nums[i-1]) nums[cnt++] = nums[i];
+		if (nums[i] != nums[cnt-1]) nums[cnt++] = nums[i];
+	}
+	return cnt;
+}
+
+//移除有序数组中重复元素，允许一个元素最多出现两次
+int removeDuplicates(vector<int> &nums){
+	int size = nums.size();
+	if (size <= 2) return size;
+	int cnt = 2;
+	for (int i = 2; i < size; i++){
+		if (nums[i] != nums[cnt-2]) nums[cnt++] = nums[i];
+	}
+	return cnt;
+}
+
+//找到数组中的顶峰元素
+int findPeakElement(vector<int> &nums){
+	int size = nums.size();
+	if (size == 1) return 0;
+	for (int i = 1; i < size - 1; i++){
+		if (nums[i-1] > nums[i]){
+			return i-1;
+		}
+	}
+	return size-1;
+}
+
+int findPeakElement(vector<int> &nums){
+	int size = nums.size();
+	int start = 0, end = size - 1;
+
+	while (start < end){
+		int mid = start + (end - start)/2;
+		if (nums[mid] < nums[mid+1]){
+			start = mid + 1;
+		}else{
+			end = mid;
+		}
+	}
+	return start;
+}
+
+//数组表示的整数加1
+vector<int> plusOne(vector<int> &nums){
+	int size = nums.size();
+	for (int i = size-1; i >= 0; i--){
+		if (nums[i] < 9){
+			nums[i]++;
+			break;
+		}else{
+			nums[i] = 0;
+		}
+	}
+	if (nums[0] == 0) nums.insert(nums.begin(), 1);
+	return nums;
+}
+
+//数组中所有的可能的子集，其中数组中无重复元素
+vector<vector<int>> subsets(vector<int> &nums){
+	int size = nums.size();
+	vector<vector<int>> res;
+	vector<int> tmp;
+	sort(nums.begin(), nums.end());
+	subsetHelper(nums, res, tmp, 0);
+	return res;
+}
+
+void subsetHelper(vector<int> &nums, vector<vector<int>> &res, vector<int> &tmp, int start){
+	res.push_back(tmp);
+
+	for (int i = start; i < nums.size(); i++){
+		tmp.push_back(nums[i]);
+		subsetHelper(nums, res, tmp, i+1);
+		tmp.pop_back();
+	}
+}
+
+//数组中所有的可能的子集，其中数组中有重复元素
+vector<vector<int>> subsets(vector<int> &nums){
+	vector<vector<int>> res;
+	vector<int> tmp;
+	sort(nums.begin(), nums.end());
+	subsetHelper(nums, res, tmp, 0);
+	return res;
+}
+
+void subsetHelper(vector<int> &nums, vector<vector<int>> &res, vector<int> &tmp, int start){
+	res.push_back(tmp);
+
+	for (int i = start; i < nums.size(); i++){
+		if (i > start && nums[i] == nums[i-1]) continue;
+		tmp.push_back(nums[i]);
+		subsetHelper(nums, res, tmp, i+1);
+		tmp.pop_back();
+	}
+}
+
+//判断数组是否可以等分为两部分
+bool isCanPartition(vector<int> &nums){
+	int size = nums.size();
+	int sum = accumulate(nums.begin(), nums.end(), 0);
+	if (sum%2 != 0) return false;
+	int target = sum/2;
+
+	vector<int> res(target+1, 0);
+	res[0] = 1;
+	for (int i = 0; i < size; i++){
+		for (int j = target; j >= nums[i]; j--){
+			res[j] = res[j] || res[j-nums[i]];
+		}
+	}
+	return res[target];
+}
+
+//求数组的最大可分子集
+vector<int> largestDivibleSubset(vector<int> &nums){
+	int size = nums.size();
+	sort(nums.begin(), nums.end());
+	vector<pair<int, int>> res(size);
+	vector<int> r;
+	int mx = 0, mx_idx = 0;
+
+	for (int i = size-1; i >= 0; i--){
+		for(int j = i; j < size; j++){
+			if (nums[j]%nums[i] == 0 && res[i].first < res[j].first + 1){
+				res[i].first = res[j].first + 1;
+				res[i].second = j;
+				if (res[i].first > mx){
+					mx = res[i].first;
+					mx_idx = i;
+				}
+			}
+		}
+	}
+	for (int i = 0; i < mx; i++){
+		r.push_back(nums[mx_idx]);
+		mx_idx = res[mx_idx].second;
+	}
+	return r;
+}
+
+//求给定序列的全排列
+vector<vector<int>> permute(vector<int> &nums){
+	vector<vector<int>> res;
+	//sort(nums.begin(), nums.end());
+	permuteHelper(res, nums, 0);
+	return res;
+}
+
+void permuteHelper(vector<vector<int>> &res, vector<int> &nums, int start){
+	if (start == nums.size()) res.push_back(nums);
+
+	for (int i = start; i < nums.size(); i++){
+		swap(nums[start], nums[i]);
+		permuteHelper(res, nums, i+1);
+		swap(nums[start], nums[i]);
+	}
+}
+
+vector<vector<int>> permute(vector<int> &nums){
+	vector<vector<int>> res;
+	vector<int> tmp;
+	permuteHelper(res, tmp, nums);
+	return res;
+}
+
+void permuteHelper(vector<vector<int>> &res, vector<int> &tmp, vector<int> &nums){
+	if (tmp.size() == nums.size()){
+		res.push_back(tmp);
+	}
+	for (int i = 0; i < nums.size(); i++){
+		bool flag = std::find(std::begin(tmp), std::end(tmp), nums[i]) != std::end(tmp);
+		if (flag) continue;
+		tmp.push_back(nums[i]);
+		permuteHelper(res, tmp, nums);
+		tmp.pop_back();
+	}
+}
+
+//数组中第K大的数
+// 使用quickSort的思路，时间复杂度为O(n);
+int findKthLargest(vector<int> &nums, int k){
+	int size = nums.size();
+	int left = 0, right = size-1;
+	while (left < right){
+		int par = partition(nums, left, right);
+		if (par == k-1) return nums[par];
+		else if (par > k-1) right = par - 1;
+		else left = par + 1;
+	}
+	return nums[k-1];
+}
+
+int partition(vector<int> &nums, int left, int right){
+	int l = left, r = right;
+	int key = nums[l];
+	while (l < r){
+		while (l < r && nums[r] < key) r--;
+		nums[l] = nums[r];
+		while (l < r && nums[l] >= key) l++;
+		nums[r] = nums[l];
+	}
+	nums[l] = key;
+	return l;
+}
+
+//使用STL中的优先队列来做
+int findKthLargest(vector<int> &nums, int k){
+	priority_queue<int> pq(nums.begin(), nums.end());
+	for (int i = 0; i < k-1; i++){
+		pq.pop();
+	}
+	return pq.pop();
+}
+
+//使用堆排序来做
+int findKthLargest(vector<int> &nums, int k){
+	build_max_heap(nums);
+	int heap_size = nums.size();
+	for (int i = 0; i < k; i++){
+		swap(nums[0], nums[heap_size-1]);
+		heap_size--;
+		max_heapify(nums, 0, heap_size);
+	}
+}
+
+int build_max_heap(vector<int> &nums){
+	int heap_size = nums.size();
+	for (int i = (heap_size>>1) - 1; i >= 0; i--){
+		max_heapify(nums, i, heap_size);
+	}
+}
+ 
+int max_heapify(vector<int> &nums, int idx, int heap_size){
+	int left = (idx<<1) + 1;
+	int right = (idx<<1) + 2;
+	int largest = idx;
+	if (left < heap_size && nums[left] > nums[largest]) largest = left;
+	if (right < heap_size && nums[right] > nums[largest]) largest = right;
+	if (largest != idx){
+		swap(nums[idx], nums[largest]);
+		max_heapify(nums, largest, heap_size);
+	}
+}
+
+//数组实现堆栈
+todo 
