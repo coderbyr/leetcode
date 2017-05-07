@@ -1,0 +1,115 @@
+//autor:lipengyu
+
+/*
+struct ListNode{
+	int val;
+	ListNode *next;
+	ListNode(int x): val(x), next(NULL){}
+};
+*/
+
+//remove duplicate element(save only one) from sorted list
+ListNode* deleteDuplicates(ListNode* head){
+	if (head == NULL || head->next == NULL) return head;
+	ListNode *p = head;
+
+	while(p){
+		while(p->next && p->val == p->next->val) p->next = p->next->next;
+		p = p->next;
+	}
+
+	return head;
+}
+
+//remove duplicate element from sorted list
+ListNode* deleteDuplicates(ListNode* head){
+	if (head == NULL || head->next == NULL) return head;
+	ListNode *pre = new ListNode(0);
+	pre->next = head;
+	ListNode *p = pre, *q = head;
+
+	while (q){
+		while (q->next && q->next->val == q->val) q = q->next;
+		if (p->next == q){
+			p = p->next;        //unique nodes
+		}else{
+			p->next = q->next;  //duplicate nodes 
+		}
+	}
+	return pre->next;
+}
+
+ListNode* deleteDuplicates(ListNode* head){
+	if (head == NULL) return head;
+	if (head->next != NULL && head->next->val == head->val){
+		while(head->next && head->next->val == head->val) head = head->next;
+		return deleteDuplicates(head->next);
+	}else{
+		head->next = deleteDuplicates(head->next);
+	}
+	return head;
+}
+
+//add two numbers
+struct ListNode{
+	int val;
+	ListNode *next;
+	ListNode(int x): val(x), next(NULL){}
+};
+
+ListNode* addTwoNumbers(ListNode *l1, ListNode *l2){
+	ListNode *p = l1, *q = l2;
+	ListNode *res = new ListNode(0);
+	ListNode *pre = res;
+
+	int sum = 0;
+	while (p || q){
+		if (p){
+			sum += p->val;
+			p = p->val;
+		}
+		if (q){
+			sum += q->val;
+			q = q->val;
+		}
+
+		res->next = new ListNode(sum%10);
+		sum /= 10;
+		res = res->next;
+	}
+	if (sum == 1) res->next = new ListNode(1);
+	return pre->next;
+}
+
+// add two numbers2
+ListNode* addTwoNumbers2(ListNode *l1, ListNode *l2){
+	stack<int> s1;
+	stack<int> s2;
+	while (l1){
+		s1.push(l1->val);
+		l1 = l1->next;
+	}
+	while (l2){
+		s2.push(l2->val);
+		l2 = l2->next;
+	}
+
+	ListNode *res = new ListNode(0);
+	int sum = 0;
+	while (!s1.empty() || !s2.empty()){
+		if (!s1.empty()){
+			sum += s1.top();
+			s1.pop();
+		}
+		if (!s2.empty()){
+			sum += s2.top();
+			s2.pop();
+		}
+		res->val = sum%10;
+		ListNode *tmp = new ListNode(sum/10);
+		tmp->next = res;
+		res = tmp;
+		sum /= 10;
+	}
+	return res->val == 0 ? res->next : res;
+}
