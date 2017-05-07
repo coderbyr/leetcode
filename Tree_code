@@ -1,0 +1,80 @@
+//author:lipengyu
+
+//二叉树的高度
+int maxDepth(TreeNode *root){
+	if (root == NULL) return 0;
+	return max(maxDepth(root->left), maxDepth(root->right)) + 1;
+	}
+
+//判断二叉树是否对称
+int isSymmetricTree(TreeNode *root){
+	if (root == NULL) return true;
+	return isSymmetricTree(root->left, root->right);
+}
+
+int isSymmetricTree(TreeNode *left, TreeNode *right){
+	if (!left && !right) return true;
+	if (!left || !right) return false;
+	return left->val == right->val; 
+	&& isSymmetricTree(left->left, right->right)
+	&& isSymmetricTree(left->right, right->left);
+}
+
+// 有序数组转位高度平衡二叉树BST
+TreeNode* sortedArrayToBST(vector<int> &nums){
+	int size = nums.size();
+	if (size == 0) return NULL;
+	if (size == 1) return new TreeNode(nums[0]);
+	return constructBSTHelper(nums, 0, size);
+}
+
+TreeNode* constructBSTHelper(vector<int> &nums, int start, int end){
+	if (start >= end) return NULL;
+	int rIdx = (end + start)/2;
+	TreeNode *root = new TreeNode(nums[rIdx]);
+	root->left = constructBSTHelper(nums, 0, rIdx);
+	root->right = constructBSTHelper(nums, rIdx+1, end);
+	return root;
+}
+
+//pathSum I: find if exists path from root to leaf while sum of path val equals target
+bool hasPathSum(TreeNode* root, int sum){
+	if (root == NULL) return false;
+	if (root->left == NULL && root->right == NULL && root->val == sum) return true;
+	return hasPathSum(root->left, sum - root->val) || hasPathSum(root->right, sum - root->val);
+}
+
+
+//pathSum II: find all paths from root to leaf while sum of path val equals target
+vector<vector<int>> pathSum(TreeNode* root, int sum){
+	vector<vector<int>> res;
+	vector<int> tmp;
+	pathSumHelper(res, tmp, root, sum);
+	return res;
+}
+
+void pathSumHelper(vector<vector<int>> &res, vector<int> &tmp, TreeNode* root, int sum){
+	if (root == NULL) return;
+	tmp.push_back(root->val);
+	if (root->left == NULL && root->right == NULL && root->val == sum)
+		res.push_back(tmp);
+	pathSumHelper(res, tmp, root->left, sum - root->val);
+	pathSumHelper(res, tmp, root->right, sum - root->val);
+	tmp.pop_back();
+}
+
+//path III: find path nums from parents node to child node ...
+
+int pathSum(TreeNode* root, int sum){
+	if (root == NULL) return 0;
+	return findPath(root, sum) + pathSum(root->left, sum) + pathSum(root->right, sum);
+}
+
+int findPath(TreeNode* root, int sum){
+	int res = 0;
+	if (root == NULL) return 0;
+	if (root->val == sum) res++;
+	res += findPath(root->left, sum - root->val);
+	res += findPath(root->right, sum - root->val);
+	return res;
+}
